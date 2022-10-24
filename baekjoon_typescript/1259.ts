@@ -16,7 +16,6 @@ rl.on("line", function(line:string):void {
     let numbers: number[] = input.split("").map(number => parseInt(number));
     inputs.push(numbers);
 
-    
 });
 
 rl.on("close", function(): void {

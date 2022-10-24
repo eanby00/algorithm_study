@@ -12,7 +12,7 @@ const rl = readline.createInterface({
 
 let input: string = ''
 rl.on("line", function(line): void {
-    input = line.toString().trim();
+    input = line.trim();
     rl.close();
 })
 
@@ -25,3 +25,19 @@ rl.on("close", function():void {
 ```
 - input은 rl.on("line", ...)에서
 - output은 rl.on("close", ...)에서
+
+```
+rl.on("line", function(line:string):void {
+    let input: string = line.trim();
+    if (input === '0') {
+        rl.close();
+    }
+    let numbers: number[] = input.split("").map(number => parseInt(number));
+    inputs.push(numbers);
+});
+```
+- 여러줄 입력을 받아야 하는 경우 rl.close()를 엔드 조건에 하게 만들어라
+
+### shift 연산은 효율적이지 못하다.
+- shift 연산은 최악의 경우 O(n)의 시간복잡도를 보여준다.
+- shift 연산이 계속 필요한 경우 queue를 구현하라
