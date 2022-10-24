@@ -36,6 +36,7 @@ rl.on("line", function (line) {
 });
 rl.on("close", function () {
     let numbers = input.split(" ").map(number => (Math.pow(parseInt(number), 2)));
-    let sum = numbers.reduce((accumulator, number) => accumulator + number) / 10;
-    console.log(sum);
+    let sum = numbers.reduce((accumulator, number) => accumulator + number);
+    let result = sum % 10;
+    console.log(result);
 });
