@@ -1,113 +1,108 @@
 // https://www.acmicpc.net/problem/10845
-import * as readline from 'readline';
 
-class Queue {
-    queue: number[] = [];
-    frontIndex: number | null;
-    rearIndex: number;
-    lastIndex: number | null;
-    queueSize: number = 0;
-    length: number;
-    
-    constructor() {
-        this.frontIndex = null;
-        this.rearIndex = 0;
-        this.lastIndex = null;
-        this.length = 0;
-    }
+import * as fs from 'fs';
 
-    setQueueSize(queueSize: number) {
-        this.queue = Array(queueSize);
-        this.queueSize = queueSize;
-    }
-
-    push(item: number) {
-        this.queue[this.rearIndex] = item;
-        if (this.rearIndex === 0) {
-            this.frontIndex = 0;
-        }
-        this.lastIndex = this.rearIndex;
-        this.rearIndex = this.rearIndex + 1
-        this.length += 1
-    }
-
-    pop() : void {
-        if (this.length !== 0) {
-            console.log(this.queue[this.frontIndex!])
-            this.frontIndex! += 1;
-            this.length -= 1
-        } else {
-            console.log(-1)
-        }
-    }
-
-    size(): void {
-        console.log(this.length);
-    }
-
-    empty(): void {
-        if (this.length === 0) {
-            console.log(1)
-        } else {
-            console.log(0)
-        }
-    }
-
-    front(): void {
-        if (this.length !== 0) {
-            console.log(this.queue[this.frontIndex!])
-        } else {
-            console.log(-1)
-        }
-    }
-
-    back(): void {
-        if (this.length !== 0) {
-            console.log(this.queue[this.lastIndex!])
-        } else {
-            console.log(-1)
-        }
+class Node {
+    item: number;
+    next: Node | null;
+    constructor(item: number) {
+        this.item = item;
+        this.next = null;
     }
 }
 
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-})
+class Queue {
+    head: Node | null;
+    tail: Node | null;
+    length: number;
 
-let inputNumber: number = 0;
-let count: number = 0;
-const queue = new Queue();
-rl.on("line", function(line: string): void {
-    let input: string = line.trim();
-    if (inputNumber === 0) {
-        inputNumber = parseInt(input);
-        queue.setQueueSize(inputNumber);
-    } else {
-        const [command, item] = input.split(" ");
-        switch(command) {
-            case 'push':
-                queue.push(parseInt(item))
-                break
-            case 'pop':
-                queue.pop();
-                break
-            case 'size':
-                queue.size();
-                break
-            case 'empty':
-                queue.empty();
-                break
-            case 'front':
-                queue.front();
-                break
-            case 'back':
-                queue.back();
-                break
+    constructor() {
+        this.head = null;
+        this.tail = null;
+        this.length = 0;
+    }
+
+    push(item: number): void {
+        const node: Node = new Node(item);
+        if (this.length === 0) {
+            this.head = node;
+        } else {
+            this.tail!.next = node;
         }
-        count += 1
+        this.tail = node;
+        this.length += 1;
     }
-    if (inputNumber === count) {
-        rl.close();
+
+    pop(): number {
+        if (this.head) {
+            if (this.head === this.tail) {
+                this.tail = null;
+            }
+            let item = this.head.item;
+            this.head = this.head.next;
+            this.length -= 1;
+            return item;
+            
+        } else {
+            return -1;
+        }
     }
-})
+
+    size(): number {
+        return this.length;
+    }
+
+    empty() : number {
+        if (this.length === 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    front() : number {
+        if (this.head) {
+            return this.head.item;
+        } else {
+            return -1;
+        }
+    }
+
+    back() : number {
+        if (this.tail) {
+            return this.tail.item;
+        } else {
+            return -1;
+        }
+    }
+}
+// "./dev/stdin"
+const input = fs.readFileSync('inputs.txt').toString().trim().split("\n"); 
+const answer = [];
+const N = parseInt(input[0]);
+const queue = new Queue();
+for (let i = 1; i <= N; ++i) {
+    const [command, item] = input[i].split(" ");
+    switch(command) {
+        case 'push':
+            queue.push(parseInt(item))
+            break
+        case 'pop':
+            answer.push(queue.pop());
+            break
+        case 'size':
+            answer.push(queue.size());
+            break
+        case 'empty':
+            answer.push(queue.empty());
+            break
+        case 'front':
+            answer.push(queue.front());
+            break
+        case 'back':
+            answer.push(queue.back());
+            break
+    }
+}
+
+console.log(answer.join('\n'))

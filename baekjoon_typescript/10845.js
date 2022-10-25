@@ -1,106 +1,100 @@
 "use strict";
-exports.__esModule = true;
 // https://www.acmicpc.net/problem/10845
-var readline = require("readline");
+exports.__esModule = true;
+var fs = require("fs");
+var Node = /** @class */ (function () {
+    function Node(item) {
+        this.item = item;
+        this.next = null;
+    }
+    return Node;
+}());
 var Queue = /** @class */ (function () {
     function Queue() {
-        this.queue = [];
-        this.queueSize = 0;
-        this.frontIndex = null;
-        this.rearIndex = 0;
-        this.lastIndex = null;
+        this.head = null;
+        this.tail = null;
         this.length = 0;
     }
-    Queue.prototype.setQueueSize = function (queueSize) {
-        this.queue = Array(queueSize);
-        this.queueSize = queueSize;
-    };
     Queue.prototype.push = function (item) {
-        this.queue[this.rearIndex] = item;
-        if (this.rearIndex === 0) {
-            this.frontIndex = 0;
+        var node = new Node(item);
+        if (this.length === 0) {
+            this.head = node;
         }
-        this.lastIndex = this.rearIndex;
-        this.rearIndex = this.rearIndex + 1;
+        else {
+            this.tail.next = node;
+        }
+        this.tail = node;
         this.length += 1;
     };
     Queue.prototype.pop = function () {
-        if (this.length !== 0) {
-            console.log(this.queue[this.frontIndex]);
-            this.frontIndex += 1;
-            this.length -= 1;
+        if (!this.head) {
+            return -1;
         }
         else {
-            console.log(-1);
+            if (this.head === this.tail) {
+                this.tail = null;
+            }
+            var item = this.head.item;
+            this.head = this.head.next;
+            this.length -= 1;
+            return item;
         }
     };
     Queue.prototype.size = function () {
-        console.log(this.length);
+        return this.length;
     };
     Queue.prototype.empty = function () {
         if (this.length === 0) {
-            console.log(1);
+            return 1;
         }
         else {
-            console.log(0);
+            return 0;
         }
     };
     Queue.prototype.front = function () {
-        if (this.length !== 0) {
-            console.log(this.queue[this.frontIndex]);
+        if (this.head) {
+            return this.head.item;
         }
         else {
-            console.log(-1);
+            return -1;
         }
     };
     Queue.prototype.back = function () {
-        if (this.length !== 0) {
-            console.log(this.queue[this.lastIndex]);
+        if (this.tail) {
+            return this.tail.item;
         }
         else {
-            console.log(-1);
+            return -1;
         }
     };
     return Queue;
 }());
-var rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-var inputNumber = 0;
-var count = 0;
+// "./dev/stdin"
+var input = fs.readFileSync('inputs.txt').toString().trim().split("\n").map(function (v) { return v.trim(); });
+var answer = [];
+var N = parseInt(input[0]);
 var queue = new Queue();
-rl.on("line", function (line) {
-    var input = line.trim();
-    if (inputNumber === 0) {
-        inputNumber = parseInt(input);
-        queue.setQueueSize(inputNumber);
+for (var i = 1; i <= N; ++i) {
+    var _a = input[i].split(" "), command = _a[0], item = _a[1];
+    switch (command) {
+        case 'push':
+            queue.push(parseInt(item));
+            break;
+        case 'pop':
+            answer.push(queue.pop());
+            break;
+        case 'size':
+            answer.push(queue.size());
+            break;
+        case 'empty':
+            answer.push(queue.empty());
+            break;
+        case 'front':
+            answer.push(queue.front());
+            break;
+        case 'back':
+            answer.push(queue.back());
+            break;
     }
-    else {
-        var _a = input.split(" "), command = _a[0], item = _a[1];
-        switch (command) {
-            case 'push':
-                queue.push(parseInt(item));
-                break;
-            case 'pop':
-                queue.pop();
-                break;
-            case 'size':
-                queue.size();
-                break;
-            case 'empty':
-                queue.empty();
-                break;
-            case 'front':
-                queue.front();
-                break;
-            case 'back':
-                queue.back();
-                break;
-        }
-        count += 1;
-    }
-    if (inputNumber === count) {
-        rl.close();
-    }
-});
+}
+console.log(answer.join('\n'));
