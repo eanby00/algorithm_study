@@ -54,3 +54,7 @@ const input = fs.readFileSync('inputs.txt').toString().trim().split("\n");
 ### 시간 초과가 나올 경우 생각해볼것
 - console.log()를 이곳저곳에서 하는 경우 시간 초과가 나올 수 있다.
 - 답은 한 곳에 묶어서 한 번에 출력할 것
+
+## 컴파일 에러 발생시
+- events.js:291 throw er; // Unhandled 'error' event
+- 해당 에러라면 그냥 조금 있다가 다시 돌려보기
