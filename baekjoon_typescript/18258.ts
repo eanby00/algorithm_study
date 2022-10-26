@@ -83,7 +83,7 @@ const anwser: number[] = [];
 const queue = new Queue();
 for (let i = 1; i <= number; ++i) {
     const [command, item] = inputs[i].trim().split(" ");
-    switch(command) {
+    switch (command) {
         case 'push':
             queue.push(parseInt(item))
             break
