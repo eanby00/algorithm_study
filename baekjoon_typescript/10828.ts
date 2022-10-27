@@ -48,7 +48,8 @@ let answer: number[] = []
 const stack = new Stack();
 
 const methodType = ['push', 'pop', 'size', 'empty', 'top' ] as const;
-type MethodType =  (typeof methodType)[number];
+type MethodType = (typeof methodType)[number];
+
 function isMethodType(command: any): command is MethodType {
     return methodType.includes(command);
 }
