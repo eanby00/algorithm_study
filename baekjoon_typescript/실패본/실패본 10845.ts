@@ -1,6 +1,9 @@
 // https://www.acmicpc.net/problem/10845
 // 사유: 시간 초과
 
+// 추측
+// console.log를 자주 하는 것은 시간적인 면에서 좋지 않은 듯?
+// 알고리즘 문제 풀 떄 정답에만 console.log를 출력하도록 만들자
 
 import * as readline from 'readline';
 class Node {

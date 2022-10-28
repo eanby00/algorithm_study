@@ -79,7 +79,7 @@ if (isMethodType(command)) {
 - 해당 조건문을 통과하면 command는 MethodType으로 type이 변경됨
 - reference: https://stackoverflow.com/questions/51528780/typescript-check-typeof-against-custom-type
 
-## 해당 코드 분석
+#### 해당 코드 분석
 ```
 const methodType = ['push', 'pop', 'size', 'empty', 'top' ] as const;
 ```
