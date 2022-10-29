@@ -103,3 +103,29 @@ function isMethodType(command: any): command is MethodType {
 - const methodType과 들어온 값을 비교해 있다면 true return
 - true로 인해 command is MethodType이 성립되고
 - 들어온 command는 type이 MethodType으로 인식됨?
+
+### key와 value 쌍의 hash를 만들고자 할 때
+- 결론: map함수를 이용해서 구현하는 것이 메모리와 시간을 절약할 수 있음
+
+#### 코드 비교
+- Map함수를 이용한 경우
+    - 메모리: 140576KB
+    - 시간: 776ms
+```
+const hash = new Map<number, number>();
+let target = hash.get(numItem); // get방식
+hash.set(numItem, target + 1);  // set방식
+```
+
+- Object를 이용해서 Map을 구현한 경우
+    - 메모리: 204292KB
+    - 시간: 1240ms
+```
+type Hash = {
+    [item: number]: number;
+}
+const hash: Hash = {};
+hash[numItem] // get방식
+hash[numItem] += 1; // set방식
+```
+
