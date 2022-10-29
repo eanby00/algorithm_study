@@ -129,3 +129,30 @@ hash[numItem] // get방식
 hash[numItem] += 1; // set방식
 ```
 
+### 알파벳을 숫자로 변환하고 싶을 때
+- alphabet.charCodeAt(index)함수를 이용하면 됨
+- 하나의 알파벳만 검사한다면 index는 0으로 설정
+
+### forEach에서 index를 구하고자 할 때
+```
+checkValue.trim().split("").forEach((alphabet, index) => {
+    const a: number = alphabet.charCodeAt(0) - 96;
+    console.log(a, index)
+
+})
+```
+- 콜백함수의 파라미터 값으로 index를 주면 됨
+- https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+
+### hash를 구현하고자 할 때 메모리를 너무 차지하는 경우가 있다면
+- hash에서 값의 충돌을 방지하고자 특정 값을 제곱하면서 곱할 경우
+```
+console.log(31 ** 7 % 1234567891, (31 ** 6 % 1234567891 * 31) % 1234567891)
+```
+- 두 값은 같다
+- 즉 아래의 두 식은 같다.
+    - 31 ** n % 1234567891
+    - (31 ** (n - 1) % 1234567891) * 31 % 1234567891
+- 거듭제곱의 경우 n의 값이 커질수록 값이 기하급수적으로 늘기 떄문에 많은 메모리를 차지한다.
+- 따라서 이전 값에 특정 값을 곱하고 나머지를 구하는 식으로 구하는 편이 메모리를 절약할 수 있다.
+- hash 함수를 구현했다면 해당 함수가 한 번만 쓰일 일은 없음으로 위의 특별한 값을 특정 map에 저장하고 쓰는 것도 고려할만하지 않을까?
