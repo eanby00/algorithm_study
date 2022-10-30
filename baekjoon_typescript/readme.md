@@ -156,3 +156,24 @@ console.log(31 ** 7 % 1234567891, (31 ** 6 % 1234567891 * 31) % 1234567891)
 - 거듭제곱의 경우 n의 값이 커질수록 값이 기하급수적으로 늘기 떄문에 많은 메모리를 차지한다.
 - 따라서 이전 값에 특정 값을 곱하고 나머지를 구하는 식으로 구하는 편이 메모리를 절약할 수 있다.
 - hash 함수를 구현했다면 해당 함수가 한 번만 쓰일 일은 없음으로 위의 특별한 값을 특정 map에 저장하고 쓰는 것도 고려할만하지 않을까?
+
+### 이분탐색의 기본
+- 1654번 문제 참고
+```
+while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const cnt = lines.reduce((prev, current) => prev + Math.floor(current/mid), 0);
+    if (cnt >= N) {
+        if (mid > answer) {
+            answer = mid;
+        }
+        low = mid + 1;
+    } else {
+        high = mid - 1;
+    }
+}
+```
+- while 조건을 줄 때 low <= high를 주어야 하는 것에 주의할 것
+- low < high의 경우 오답인 경우가 있음
+- low === high일 경우 mid는 low나 high가 되고
+- 그 때의 값을 체크해봐야 하기 때문?
