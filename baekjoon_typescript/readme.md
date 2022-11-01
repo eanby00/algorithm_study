@@ -245,3 +245,9 @@ groundFrequency.sort((a, b) => {
 })
 ```
 - a가 b보다 작을 때 1을 return한다면 b -> a 순으로 정렬됨
+
+### 자바스크립트로 graph 구현하기
+// https://velog.io/@nomadhash/Data-Structure-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%A1%9C-%EA%B7%B8%EB%9E%98%ED%94%84-Graph-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
+
+### 자바스크립트 객체의 length 구하기
+- Object.keys(this.nodes).length
