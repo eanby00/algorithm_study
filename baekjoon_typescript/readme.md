@@ -230,3 +230,18 @@ if (getTrees >= m) {
 - 위의 경우 mid > answer의 부분에 getTrees === m을 주면 오답이 되는데
 - 문제에서 요구하는 답안이 정확히 m일 경우의 답을 원하는 것이 아니기 때문
 - 즉, 문제를 잘 읽자
+
+### sort 함수의 콜백함수
+- compareFunction(a, b) < 0이라면 a가 먼저 옴
+- compareFunction(a, b) > 0이라면 b가 먼저 옴
+#### 내림차순 정렬
+```
+groundFrequency.sort((a, b) => {
+    if (a.frequency < b.frequency) {
+        return 1
+    } else {
+        return -1
+    }
+})
+```
+- a가 b보다 작을 때 1을 return한다면 b -> a 순으로 정렬됨
