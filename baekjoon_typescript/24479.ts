@@ -8,7 +8,6 @@
 
 import * as fs from "fs";
 
-
 // input 처리
 const inputs: string[] = fs
   .readFileSync("inputs.txt")
@@ -27,7 +26,7 @@ const [first, ...edges] = inputs.map((inputLine) =>
 const graph: { [startVertex: number]: number[] } = {};
 
 for (let i = 1; i <= first[0]; ++i) {
-    graph[i] = [];
+  graph[i] = [];
 }
 
 edges.forEach((edge) => {
@@ -56,5 +55,5 @@ const dfs = (vertex: number) => {
 dfs(first[2]);
 
 // 답 출력
-const [,...answer] = visited;
-console.log(answer.join('\n'));
+const [, ...answer] = visited;
+console.log(answer.join("\n"));
