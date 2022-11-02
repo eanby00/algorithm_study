@@ -1,4 +1,114 @@
-# 새로 알게된 것 모음
+# 목차
+
+- [알고리즘](#알고리즘)
+- [트러블슈팅](#트러블-슈팅)
+- [새로 알게 된 것](#새로-알게-된-것)
+
+# 알고리즘
+
+### 이분탐색의 기본
+
+- 1654번 문제 참고
+
+```
+while (low <= high) {
+    const mid = Math.floor((low + high) / 2);
+    const cnt = lines.reduce((prev, current) => prev + Math.floor(current/mid), 0);
+    if (cnt >= N) {
+        if (mid > answer) {
+            answer = mid;
+        }
+        low = mid + 1;
+    } else {
+        high = mid - 1;
+    }
+}
+```
+
+- while 조건을 줄 때 low <= high를 주어야 하는 것에 주의할 것
+- low < high의 경우 오답인 경우가 있음
+- low === high일 경우 mid는 low나 high가 되고 그 때의 값을 체크해봐야 하기 때문?
+- low, high를 갱신할 때는 mid + 1, mid - 1이어야 함을 주의할 것
+
+### 자바스크립트로 graph 구현하기
+
+#### 인접 리스트(Adjacency List)의 경우
+
+```
+const graph: { [vertex: number]: number[] } = {};
+
+for (let i = 1; i <= first[0]; ++i) {
+  graph[i] = [];
+}
+
+edges.forEach((edge) => {
+  graph[edge[0]].push(edge[1]);
+  graph[edge[1]].push(edge[0]);
+});
+
+for (const vertex in graph) {
+  graph[vertex].sort((a, b) => b - a);
+}
+```
+
+- graph의 역할을 하는 객체를 생성
+- 문제에서 주어진 조건에 따라 노드 초기화
+- 문제에서 주어진 edges를 이용해서 인접 리스트의 내용물 생성
+
+### dfs
+
+- 재귀 함수의 형식으로 작성함
+- 함수 시작과 동시에 매개변수로 온 자기 자신이 방문되었음을 표시, 경우에 따라서 추가적인 로직이 필요할 수 있음
+- 자기 자신과 연결된 노드 중 방문되지 않은 값들을 대상으로 dfs함수 호출
+
+```
+const dfs = (vertex: number) => {
+  visited[vertex] = 1
+
+  graph[vertex].forEach((next) => {
+    if (visited[next] === 0) {
+      dfs(next);
+    }
+  });
+};
+
+```
+
+- forEach이전에도 방문 여부를 체크하는 경우를 봤는데 아직까지 필요는 없었음
+
+# 트러블 슈팅
+
+### shift 연산은 효율적이지 못하다.
+
+- shift 연산은 최악의 경우 O(n)의 시간복잡도를 보여준다.
+- shift 연산이 계속 필요한 경우 queue를 구현하라
+
+### 시간 초과가 나올 경우 생각해볼것
+
+- console.log()를 이곳저곳에서 하는 경우 시간 초과가 나올 수 있다.
+- 답은 한 곳에 묶어서 한 번에 출력할 것
+
+### 컴파일 에러 발생시
+
+- events.js:291 throw er; // Unhandled 'error' event
+- 해당 에러라면 그냥 조금 있다가 다시 돌려보기
+
+### sort함수는 기본적으로 문자형에 대해서 작동한다.
+
+```
+const test = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+console.log(test)
+test.reverse();
+console.log(test)
+test.sort()
+console.log(test)
+```
+
+- reverse한 값을 sort했을 경우 나오는 값은
+- 최초의 test와 동일한 값이 아닌 1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9이다.
+- 즉 문자열을 기본으로 하기 때문에 숫자형에 대해 sort할 경우에는 무조건 콜백 함수를 사용하자
+
+# 새로 알게 된 것
 
 ### typescript에서의 input, output 1
 
@@ -48,21 +158,6 @@ const input = fs.readFileSync('inputs.txt').toString().trim().split("\n");
 - 위의 코드를 이용해서 또 다른 방식으로 input할 수 있음
 - 위의 코드의 경우 1번 방식과는 달리 inputs.txt에 미리 값을 넣어둠으로써 테스트를 간소화할 수 있음
 - 실제 코드 제출 시에는 "./dev/stdin"를 사용해주어야 함
-
-### shift 연산은 효율적이지 못하다.
-
-- shift 연산은 최악의 경우 O(n)의 시간복잡도를 보여준다.
-- shift 연산이 계속 필요한 경우 queue를 구현하라
-
-### 시간 초과가 나올 경우 생각해볼것
-
-- console.log()를 이곳저곳에서 하는 경우 시간 초과가 나올 수 있다.
-- 답은 한 곳에 묶어서 한 번에 출력할 것
-
-### 컴파일 에러 발생시
-
-- events.js:291 throw er; // Unhandled 'error' event
-- 해당 에러라면 그냥 조금 있다가 다시 돌려보기
 
 ### custom type의 type check
 
@@ -185,31 +280,7 @@ console.log(31 ** 7 % 1234567891, (31 ** 6 % 1234567891 * 31) % 1234567891)
 - 따라서 이전 값에 특정 값을 곱하고 나머지를 구하는 식으로 구하는 편이 메모리를 절약할 수 있다.
 - hash 함수를 구현했다면 해당 함수가 한 번만 쓰일 일은 없음으로 위의 특별한 값을 특정 map에 저장하고 쓰는 것도 고려할만하지 않을까?
 
-### 이분탐색의 기본
-
-- 1654번 문제 참고
-
-```
-while (low <= high) {
-    const mid = Math.floor((low + high) / 2);
-    const cnt = lines.reduce((prev, current) => prev + Math.floor(current/mid), 0);
-    if (cnt >= N) {
-        if (mid > answer) {
-            answer = mid;
-        }
-        low = mid + 1;
-    } else {
-        high = mid - 1;
-    }
-}
-```
-
-- while 조건을 줄 때 low <= high를 주어야 하는 것에 주의할 것
-- low < high의 경우 오답인 경우가 있음
-- low === high일 경우 mid는 low나 high가 되고
-- 그 때의 값을 체크해봐야 하기 때문?
-
-### 문제를 잘 읽자
+### 문제를 잘 읽자 \*\*
 
 - 2805번
 
@@ -227,14 +298,22 @@ if (getTrees >= m) {
     high = mid - 1;
 }
 ```
+
 - 위의 경우 mid > answer의 부분에 getTrees === m을 주면 오답이 되는데
 - 문제에서 요구하는 답안이 정확히 m일 경우의 답을 원하는 것이 아니기 때문
 - 즉, 문제를 잘 읽자
 
+### 자바스크립트 객체의 length 구하기
+
+- Object.keys(this.nodes).length
+
 ### sort 함수의 콜백함수
+
 - compareFunction(a, b) < 0이라면 a가 먼저 옴
 - compareFunction(a, b) > 0이라면 b가 먼저 옴
+
 #### 내림차순 정렬
+
 ```
 groundFrequency.sort((a, b) => {
     if (a.frequency < b.frequency) {
@@ -244,23 +323,5 @@ groundFrequency.sort((a, b) => {
     }
 })
 ```
+
 - a가 b보다 작을 때 1을 return한다면 b -> a 순으로 정렬됨
-
-### 자바스크립트로 graph 구현하기
-// https://velog.io/@nomadhash/Data-Structure-%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8%EB%A1%9C-%EA%B7%B8%EB%9E%98%ED%94%84-Graph-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
-
-### 자바스크립트 객체의 length 구하기
-- Object.keys(this.nodes).length
-
-### sort함수는 기본적으로 문자형에 대해서 작동한다.
-```
-const test = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-console.log(test)
-test.reverse();
-console.log(test)
-test.sort()
-console.log(test)
-```
-- reverse한 값을 sort했을 경우 나오는 값은
-- 최초의 test와 동일한 값이 아닌 1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9이다.
-- 즉 문자열을 기본으로 하기 때문에 숫자형에 대해 sort할 경우에는 무조건 콜백 함수를 사용하자
