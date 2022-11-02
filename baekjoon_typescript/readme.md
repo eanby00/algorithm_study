@@ -251,3 +251,16 @@ groundFrequency.sort((a, b) => {
 
 ### 자바스크립트 객체의 length 구하기
 - Object.keys(this.nodes).length
+
+### sort함수는 기본적으로 문자형에 대해서 작동한다.
+```
+const test = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+console.log(test)
+test.reverse();
+console.log(test)
+test.sort()
+console.log(test)
+```
+- reverse한 값을 sort했을 경우 나오는 값은
+- 최초의 test와 동일한 값이 아닌 1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9이다.
+- 즉 문자열을 기본으로 하기 때문에 숫자형에 대해 sort할 경우에는 무조건 콜백 함수를 사용하자
