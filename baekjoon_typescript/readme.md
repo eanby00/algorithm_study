@@ -76,6 +76,40 @@ const dfs = (vertex: number) => {
 
 - forEach이전에도 방문 여부를 체크하는 경우를 봤는데 아직까지 필요는 없었음
 
+### bfs
+
+- queue의 자료구조를 이용
+- 함수 시작과 동시에 매개변수로 온 시작 노드가 방문되었음을 표시, 해당 노드를 queue에 push
+- queue에 무언가가 들어있는 동안 반복
+  - queue의 shift로 나온 노드와 연결된 노드들 중에 방문하지 않은 것이 있는지 확인
+  - 방문하지 않은 노드를 방문했음을 표시하고 queue에 push
+
+```
+const visited: number[] = new Array(N + 1).fill(0);
+let count = 1;
+const queue: number[] = [];
+
+const visitedLogic = (vertex: number) => {
+  visited[vertex] = count;
+  count += 1;
+  queue.push(vertex);
+};
+
+const bfs = (vertex: number) => {
+  visitedLogic(vertex);
+
+  while (queue.length !== 0) {
+    const checkVertex = queue.shift();
+
+    graph[checkVertex!].forEach((endVertex) => {
+      if (visited[endVertex] === 0) {
+        visitedLogic(endVertex);
+      }
+    });
+  }
+};
+```
+
 # 트러블 슈팅
 
 ### shift 연산은 효율적이지 못하다.
