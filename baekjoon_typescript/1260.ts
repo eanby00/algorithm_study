@@ -43,10 +43,6 @@ class Graph {
 }
 
 class DFSGraph extends Graph {
-  constructor(vertexNumber: number, edges: number[][]) {
-    super(vertexNumber, edges);
-  }
-
   dfs = (vertex: number) => {
     this.visited[vertex] = 1;
     this.answer.push(vertex);
@@ -61,10 +57,6 @@ class DFSGraph extends Graph {
 
 class BFSGraph extends Graph {
   queue: number[] = [];
-
-  constructor(vertexNumber: number, edges: number[][]) {
-    super(vertexNumber, edges);
-  }
 
   bfs = (vertex: number) => {
     this.visited[vertex] = 1;

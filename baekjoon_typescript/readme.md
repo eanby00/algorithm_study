@@ -359,3 +359,8 @@ groundFrequency.sort((a, b) => {
 ```
 
 - a가 b보다 작을 때 1을 return한다면 b -> a 순으로 정렬됨
+
+### class 상속시 constructor에 관하여
+
+- 만약 상속 받은 class가 따로 constructor가 필요하지 않는 경우 constructor 생략 가능
+- 즉, super도 생략 가능

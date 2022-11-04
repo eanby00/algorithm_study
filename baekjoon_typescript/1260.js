@@ -53,8 +53,8 @@ var Graph = /** @class */ (function () {
 }());
 var DFSGraph = /** @class */ (function (_super) {
     __extends(DFSGraph, _super);
-    function DFSGraph(vertexNumber, edges) {
-        var _this = _super.call(this, vertexNumber, edges) || this;
+    function DFSGraph() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.dfs = function (vertex) {
             _this.visited[vertex] = 1;
             _this.answer.push(vertex);
@@ -70,8 +70,8 @@ var DFSGraph = /** @class */ (function (_super) {
 }(Graph));
 var BFSGraph = /** @class */ (function (_super) {
     __extends(BFSGraph, _super);
-    function BFSGraph(vertexNumber, edges) {
-        var _this = _super.call(this, vertexNumber, edges) || this;
+    function BFSGraph() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.queue = [];
         _this.bfs = function (vertex) {
             _this.visited[vertex] = 1;
