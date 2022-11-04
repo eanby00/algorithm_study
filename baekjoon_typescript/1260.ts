@@ -1,112 +1,109 @@
 // https://www.acmicpc.net/problem/1260
 // DFS와 BFS
 
-// 인접 리스트 방식으로 그래프 구현
+import * as fs from 'fs';
 
-// 실패
-// 인접 리스트 구현은 성공했지만, dfs나 bfs에서 오류가 발생
-// dfs, bfs 문제를 따로 풀어보고 다시 해보기
-
-import * as fs from "fs";
+type GraphType = { [vertex: number]: number[] };
 
 class Graph {
-  nodes: {
-    [node: string]: string[];
+  graph: GraphType = {};
+  visited: number[] = [];
+  answer: number[] = [];
+
+  constructor(vertexNumber: number, edges: number[][]) {
+    for (let vertex = 1; vertex <= vertexNumber; ++vertex) {
+      this.graph[vertex] = [];
+    }
+    this.visited = new Array(vertexNumber + 1).fill(0);
+
+    this.setGraphByEdges(edges);
+  }
+
+  setGraphByEdges = (edges: number[][]) => {
+    for (const [startVertex, endVertex] of edges) {
+      this.graph[startVertex].push(endVertex);
+      this.graph[endVertex].push(startVertex);
+    }
+
+    for (const vertex in this.graph) {
+      this.graph[vertex].sort((a, b) => a - b);
+    }
   };
-  dfs_visited: {
-    [node: string]: boolean;
-  } = {};
-  dfs_answer: string[] = [];
 
-  constructor() {
-    this.nodes = {};
-  }
-
-  addNewVertex(node: string) {
-    this.nodes[node] = [];
-  }
-
-  addNewEdge(startNode: string, endNode: string) {
-    if (!this.hasVertex(startNode)) {
-      this.addNewVertex(startNode);
-    }
-    if (!this.hasVertex(endNode)) {
-      this.addNewVertex(endNode);
-    }
-    if (!(endNode in this.nodes[startNode])) {
-      this.nodes[startNode].push(endNode);
-    }
-    if (!(startNode in this.nodes[endNode])) {
-      this.nodes[endNode].push(startNode);
-    }
-  }
-
-  sortEdges() {
-    for (const edges in this.nodes) {
-      this.nodes[edges].sort((a, b) => parseInt(a) - parseInt(b));
-    }
-  }
-
-  hasVertex(node: string): boolean {
-    if (this.nodes[node]) {
+  isVisited = (vertex: number): boolean => {
+    if (this.visited[vertex] === 1) {
       return true;
-    } else {
-      return false;
     }
-  }
+    return false;
+  };
 
-  dfs_start(startVertex: string) {
-    this.dfs_visited = {};
-    this.dfs_answer = [];
-    this.sortEdges();
-    this.dfs(startVertex);
-    console.log(this.dfs_answer.join(" "));
-  }
-
-  dfs(startVertex: string) {
-    if (this.dfs_visited[startVertex] === true) {
-      return;
-    }
-    this.dfs_visited[startVertex] = true;
-    this.dfs_answer.push(startVertex);
-
-    this.nodes[startVertex].forEach((endVertex) => {
-      if (!this.dfs_visited[endVertex]) {
-        this.dfs(endVertex);
-      }
-    });
-  }
-
-  bfs(startVertex: string) {
-    this.sortEdges();
-    const visited: string[] = [];
-    const needVisited: string[] = [];
-
-    needVisited.push(startVertex);
-
-    while (needVisited.length !== 0) {
-      const vertext = needVisited.shift()!;
-      if (!visited.includes(vertext)) {
-        visited.push(vertext);
-        this.nodes[vertext].forEach(vertex => {
-            if (!visited.includes(vertex)) {
-                needVisited.push(vertex)
-            }
-        });
-      }
-    }
-
-    console.log(visited.join(" "));
-  }
+  printAnswer = () => {
+    console.log(this.answer.join(' '));
+  };
 }
 
-const inputs = fs.readFileSync("inputs.txt").toString().trim().split("\n");
-const [first, ...edges] = inputs.map((input) => input.trim().split(" "));
-const graph = new Graph();
+class DFSGraph extends Graph {
+  constructor(vertexNumber: number, edges: number[][]) {
+    super(vertexNumber, edges);
+  }
 
-edges.forEach((edge) => {
-  graph.addNewEdge(edge[0], edge[1]);
-});
+  dfs = (vertex: number) => {
+    this.visited[vertex] = 1;
+    this.answer.push(vertex);
 
-graph.dfs_start(first[2]);
-graph.bfs(first[2]);
+    this.graph[vertex].forEach((vertex) => {
+      if (!this.isVisited(vertex)) {
+        this.dfs(vertex);
+      }
+    });
+  };
+}
+
+class BFSGraph extends Graph {
+  queue: number[] = [];
+
+  constructor(vertexNumber: number, edges: number[][]) {
+    super(vertexNumber, edges);
+  }
+
+  bfs = (vertex: number) => {
+    this.visited[vertex] = 1;
+    this.answer.push(vertex);
+    this.queue.push(vertex);
+
+    while (this.queue.length > 0) {
+      const checkVertex = this.queue.shift();
+      this.graph[checkVertex!].forEach((vertex) => {
+        if (!this.isVisited(vertex)) {
+          this.visited[vertex] = 1;
+          this.answer.push(vertex);
+          this.queue.push(vertex);
+        }
+      });
+    }
+  };
+}
+
+const INPUT_LOCATION = 'inputs.txt';
+const splitLine = (item: string): string[] => item.split(' ');
+const parseNumber = (item: string): number => parseInt(item);
+const splitLineAndParseNumber = (item: string) =>
+  splitLine(item).map(parseNumber);
+
+const inputs: string[] = fs
+  .readFileSync(INPUT_LOCATION)
+  .toString()
+  .trim()
+  .split('\n');
+
+const [[vertexNumber, , startVertex], ...edges] = inputs.map(
+  splitLineAndParseNumber
+);
+
+const dfsGraph = new DFSGraph(vertexNumber, edges);
+dfsGraph.dfs(startVertex);
+dfsGraph.printAnswer();
+
+const bfsGraph = new BFSGraph(vertexNumber, edges);
+bfsGraph.bfs(startVertex);
+bfsGraph.printAnswer();
