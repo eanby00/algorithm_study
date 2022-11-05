@@ -19,6 +19,11 @@ exports.__esModule = true;
 // fail: 단수히 5로 나눈 값을 계산하면 25와 같이 5 ** 2인 값에 대한 고려가 되지 않는다.
 // 가설: 만약 5로 나누었는데도 5보다 크다면 해당 값은 5의 거듭제곱을 넘은 값이 됨
 // 그렇다면 거듭제곱된 횟수를 추가로 더해야 함으로 5로 나누어지지 않을 때까지 나누면서 그 값을 모으면 answer가 아닐까
+// 예시
+// 20 -> 4  (4)
+// 25 -> 5 -> 1 ( 5 + 1 = 6 )
+// 30 -> 6 -> 1 (7)
+// 125 -> 25 -> 5 -> 1 (31)
 var fs = require("fs");
 var INPUT_LOCATION = 'inputs.txt';
 var input = +fs.readFileSync(INPUT_LOCATION).toString().trim();
