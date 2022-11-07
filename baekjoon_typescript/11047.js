@@ -21,8 +21,7 @@ var valueOfCoinsReverse = valueOfCoinsNumber.reverse();
 var answer = 0;
 valueOfCoinsReverse.forEach(function (valueOfCoin) {
     var numberOfCoins = Math.floor(k / valueOfCoin);
-    k = k - numberOfCoins * valueOfCoin;
+    k -= numberOfCoins * valueOfCoin;
     answer += numberOfCoins;
-    //   console.log(k, numberOfCoins);
 });
 console.log(answer);
