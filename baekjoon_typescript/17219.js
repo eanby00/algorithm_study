@@ -23,6 +23,8 @@ settingPasswords.forEach(function (addressAndPassword) {
     var address = addressAndPassword[0], password = addressAndPassword[1];
     addressToPassword.set(address, password);
 });
+var answers = [];
 findPasswordByAddress.forEach(function (address) {
-    console.log(addressToPassword.get(address[0]));
+    answers.push(addressToPassword.get(address[0]));
 });
+console.log(answers.join('\n'));
