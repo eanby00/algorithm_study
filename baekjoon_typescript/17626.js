@@ -10,22 +10,22 @@ exports.__esModule = true;
 // 나머지는 모두 return 4
 var fs = require("fs");
 var INPUT_LOCATION = 'inputs.txt';
-var isIntegerSqrt = function (expression) {
+var sqrtNumisInteger = function (expression) {
     return Number.isInteger(Math.sqrt(expression));
 };
 var getFourSquares = function (num) {
     var rootFirst = Math.sqrt(num);
-    if (isIntegerSqrt(num)) {
+    if (sqrtNumisInteger(num)) {
         return 1;
     }
     for (var i = 1; i <= rootFirst + 1; ++i) {
-        if (isIntegerSqrt(num - Math.pow(i, 2))) {
+        if (sqrtNumisInteger(num - Math.pow(i, 2))) {
             return 2;
         }
     }
     for (var i = 1; i <= rootFirst + 1; ++i) {
         for (var j = 1; j <= i; ++j) {
-            if (isIntegerSqrt(num - Math.pow(i, 2) - Math.pow(j, 2))) {
+            if (sqrtNumisInteger(num - Math.pow(i, 2) - Math.pow(j, 2))) {
                 return 3;
             }
         }
