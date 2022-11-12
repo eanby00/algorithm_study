@@ -37,6 +37,9 @@ const solution = (matrix: MatrixType, n: number) => {
 
     for (let i = y; i < currentN + y; ++i) {
       for (let j = x; j < currentN + x; ++j) {
+        if (matrix[i][j] !== standardValue) {
+          break;
+        }
         numsOfMatrix[matrix[i][j]] += 1;
       }
     }
