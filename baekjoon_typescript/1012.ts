@@ -5,8 +5,14 @@
 // testcase를 분리
 // 모두 0으로 이루어진 m, n의 행렬 생성
 // 좌표값을 기준으로 1로 설정
-// (0,0)부터 순회하면서 1을 만나면 dfs나 bfs를 이용해서 연결된 1을 모두 0으로 초기화
-// 마지막 좌표까지 돌면서 bfs, dfs를 실행한 횟수를 저장하고 그것을 return
+// (0,0)부터 순회하면서 1을 만나면 dfs를 이용해서 연결된 1을 모두 0으로 초기화
+// 마지막 좌표까지 돌면서 dfs를 실행한 횟수를 저장하고 그것을 return
+
+// 주의할 것
+// hasCabbage에서 try-catch의 이유
+// 특정 좌표의 상하좌우를 검색할 떄 선언된 행렬을 넘어가는 경우에는 에러가 발생한다.
+// 에러가 발생하는 경우, 즉 행렬을 넘어가는 경우는 당연히 해당 좌표에 배추가 존재하지 않는다.
+// 따라서 false를 return한다.
 
 import * as fs from 'fs';
 
@@ -19,7 +25,7 @@ class Ground {
   yLength: number;
 
   constructor(m: number, n: number) {
-    this.ground = Array.from(Array(n + 1), () => Array(m + 1).fill(0));
+    this.ground = Array.from(Array(n), () => Array(m).fill(0));
     this.answer = 0;
     this.xLength = m;
     this.yLength = n;

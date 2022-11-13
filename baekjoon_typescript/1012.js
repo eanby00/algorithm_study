@@ -63,7 +63,7 @@ var Ground = /** @class */ (function () {
             });
             console.log(ground);
         };
-        this.ground = Array.from(Array(n + 1), function () { return Array(m + 1).fill(0); });
+        this.ground = Array.from(Array(n), function () { return Array(m).fill(0); });
         this.answer = 0;
         this.xLength = m;
         this.yLength = n;
@@ -89,7 +89,6 @@ for (var i = 0; i < t; ++i) {
     for (var j = index + 1; j < index + 1 + k; ++j) {
         ground.setCabbage(testCases[j]);
     }
-    ground.getGround();
     ground.setAnswer();
     ground.getAnswer();
     index += k + 1;
