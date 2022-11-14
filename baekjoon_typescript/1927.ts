@@ -32,17 +32,19 @@ class Heap {
     });
   };
 
+  changeValues = (currentIndex: number, targetIndex: number) => {
+    const currentItem = this.heap[currentIndex];
+    this.heap[currentIndex] = this.heap[targetIndex];
+    this.heap[targetIndex] = currentItem;
+  };
+
   push = (item: number) => {
     let itemIndex = this.heap.length;
     let parrentIndex = Math.floor(itemIndex / 2);
     this.heap.push(item);
 
-    while (itemIndex > 1 && this.heap[parrentIndex] > this.heap[itemIndex]) {
-      const parrentItem = this.heap[parrentIndex];
-      const currentItem = this.heap[itemIndex];
-
-      this.heap[parrentIndex] = currentItem;
-      this.heap[itemIndex] = parrentItem;
+    while (this.heap[parrentIndex] > this.heap[itemIndex]) {
+      this.changeValues(itemIndex, parrentIndex);
 
       itemIndex = parrentIndex;
       parrentIndex = Math.floor(itemIndex / 2);
@@ -55,21 +57,17 @@ class Heap {
     }
 
     let currentIndex = 1;
+    let leftChildIndex = currentIndex * 2;
+    let rightChildIndex = currentIndex * 2 + 1;
     let lastIndex = this.heap.length - 1;
 
-    const currentitem = this.heap[currentIndex];
-    const lastItem = this.heap[lastIndex];
-    this.heap[currentIndex] = lastItem;
-    this.heap[lastIndex] = currentitem;
+    this.changeValues(currentIndex, lastIndex);
 
     const popValue = this.heap.pop()!;
 
-    let leftChildIndex = currentIndex * 2;
-    let rightChildIndex = currentIndex * 2 + 1;
-
     const getMinIndex = () => {
       if (
-        this.heap.length <= rightChildIndex ||
+        !this.heap[rightChildIndex] ||
         this.heap[leftChildIndex] < this.heap[rightChildIndex]
       ) {
         return leftChildIndex;
@@ -82,11 +80,7 @@ class Heap {
       this.heap[currentIndex] > this.heap[rightChildIndex]
     ) {
       let minIndex = getMinIndex();
-
-      const currentItem = this.heap[currentIndex];
-      const childItem = this.heap[minIndex];
-      this.heap[currentIndex] = childItem;
-      this.heap[minIndex] = currentItem;
+      this.changeValues(currentIndex, minIndex);
 
       currentIndex = minIndex;
       leftChildIndex = currentIndex * 2;
@@ -97,10 +91,6 @@ class Heap {
 
   printAnswer = () => {
     console.log(this.answers.join('\n'));
-  };
-
-  print = () => {
-    console.log(this.heap);
   };
 }
 

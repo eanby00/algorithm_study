@@ -26,15 +26,17 @@ var Heap = /** @class */ (function () {
                 }
             });
         };
+        this.changeValues = function (currentIndex, targetIndex) {
+            var currentItem = _this.heap[currentIndex];
+            _this.heap[currentIndex] = _this.heap[targetIndex];
+            _this.heap[targetIndex] = currentItem;
+        };
         this.push = function (item) {
             var itemIndex = _this.heap.length;
             var parrentIndex = Math.floor(itemIndex / 2);
             _this.heap.push(item);
-            while (itemIndex > 1 && _this.heap[parrentIndex] > _this.heap[itemIndex]) {
-                var parrentItem = _this.heap[parrentIndex];
-                var currentItem = _this.heap[itemIndex];
-                _this.heap[parrentIndex] = currentItem;
-                _this.heap[itemIndex] = parrentItem;
+            while (_this.heap[parrentIndex] > _this.heap[itemIndex]) {
+                _this.changeValues(itemIndex, parrentIndex);
                 itemIndex = parrentIndex;
                 parrentIndex = Math.floor(itemIndex / 2);
             }
@@ -45,15 +47,12 @@ var Heap = /** @class */ (function () {
             }
             var currentIndex = 1;
             var lastIndex = _this.heap.length - 1;
-            var currentitem = _this.heap[currentIndex];
-            var lastItem = _this.heap[lastIndex];
-            _this.heap[currentIndex] = lastItem;
-            _this.heap[lastIndex] = currentitem;
+            _this.changeValues(currentIndex, lastIndex);
             var popValue = _this.heap.pop();
             var leftChildIndex = currentIndex * 2;
             var rightChildIndex = currentIndex * 2 + 1;
             var getMinIndex = function () {
-                if (_this.answers.length <= rightChildIndex ||
+                if (_this.heap.length <= rightChildIndex ||
                     _this.heap[leftChildIndex] < _this.heap[rightChildIndex]) {
                     return leftChildIndex;
                 }
@@ -62,10 +61,7 @@ var Heap = /** @class */ (function () {
             while (_this.heap[currentIndex] > _this.heap[leftChildIndex] ||
                 _this.heap[currentIndex] > _this.heap[rightChildIndex]) {
                 var minIndex = getMinIndex();
-                var currentItem = _this.heap[currentIndex];
-                var childItem = _this.heap[minIndex];
-                _this.heap[currentIndex] = childItem;
-                _this.heap[minIndex] = currentItem;
+                _this.changeValues(currentIndex, minIndex);
                 currentIndex = minIndex;
                 leftChildIndex = currentIndex * 2;
                 rightChildIndex = currentIndex * 2 + 1;
