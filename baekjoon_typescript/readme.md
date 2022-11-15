@@ -437,3 +437,19 @@ this.ground = Array.from(Array(n), () => Array(m).fill(0));
 - 그것과 어떤 숫자를 비교하면 결과값은 항상 false다.
 
 - 이것을 조건문을 설정할 때 고려해야 한다.
+
+### 서로 다른 2개의 index값을 서로 교체해야 할 때
+
+```
+const currentItem = heap[currentIndex];
+heap[currentIndex] = heap[targetIndex];
+heap[targetIndex] = currentItem;
+
+[heap[currentIndex], heap[targetIndex]] = [heap[targetIndex], heap[currentIndex]];
+```
+
+- 둘 다 제대로 작동한다.
+- 하지만 위의 방식이 조금 메모리와 시간을 절약했다.
+- 실험 횟수가 적어서 제대로 된 결과는 아니니 주의할 것
+- 아래와 같은 방식도 사용할 수 있다.
+- [] = []와 같이 괄호를 이용한 것은 괄호가 없다면 prettier가 자동으로 포맷팅할 때 이상하게 변하기 때문

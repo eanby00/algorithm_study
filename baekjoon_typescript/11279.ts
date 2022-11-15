@@ -12,6 +12,20 @@ const heap = (items: number[]) => {
   const heap = [NaN];
   const answers: number[] = [];
 
+  const exchangeValue = (currentIndex: number, targetIndex: number) => {
+    const currentItem = heap[currentIndex];
+    heap[currentIndex] = heap[targetIndex];
+    heap[targetIndex] = currentItem;
+  };
+
+  const getMaxIndex = (leftIndex: number, rightIndex: number): number => {
+    if (!heap[rightIndex] || heap[leftIndex] > heap[rightIndex]) {
+      return leftIndex;
+    }
+
+    return rightIndex;
+  };
+
   const addItemToHeap = (item: number) => {
     heap.push(item);
 
@@ -19,10 +33,7 @@ const heap = (items: number[]) => {
     let parrentIndex = Math.floor(currentIndex / 2);
 
     while (heap[currentIndex] > heap[parrentIndex]) {
-      const currentItem = heap[currentIndex];
-
-      heap[currentIndex] = heap[parrentIndex];
-      heap[parrentIndex] = currentItem;
+      exchangeValue(currentIndex, parrentIndex);
 
       currentIndex = parrentIndex;
       parrentIndex = Math.floor(currentIndex / 2);
@@ -35,33 +46,19 @@ const heap = (items: number[]) => {
       return;
     }
 
-    const maxValue = heap[1];
-    heap[1] = heap[heap.length - 1];
-    heap[heap.length - 1] = maxValue;
-
+    exchangeValue(1, heap.length - 1);
     const returnValue = heap.pop() as number;
 
     let currentIndex = 1;
     let leftChildIndex = currentIndex * 2;
     let rightChildIndex = currentIndex * 2 + 1;
 
-    const getMaxIndex = (leftIndex: number, rightIndex: number): number => {
-      if (!heap[rightIndex] || heap[leftIndex] > heap[rightIndex]) {
-        return leftIndex;
-      }
-
-      return rightIndex;
-    };
-
     while (
       heap[currentIndex] < heap[leftChildIndex] ||
       heap[currentIndex] < heap[rightChildIndex]
     ) {
       const maxIndex = getMaxIndex(leftChildIndex, rightChildIndex);
-
-      const tempValue = heap[currentIndex];
-      heap[currentIndex] = heap[maxIndex];
-      heap[maxIndex] = tempValue;
+      exchangeValue(currentIndex, maxIndex);
 
       currentIndex = maxIndex;
       leftChildIndex = currentIndex * 2;
@@ -79,10 +76,10 @@ const heap = (items: number[]) => {
         addItemToHeap(item);
       }
     });
-    console.log(answers.join('\n'));
+    return answers.join('\n');
   };
 
-  solution(items);
+  return solution(items);
 };
 
 const inputs: number[] = fs
@@ -93,4 +90,4 @@ const inputs: number[] = fs
   .map((input) => +input.trim());
 
 const [, ...items] = inputs;
-heap(items);
+console.log(heap(items));

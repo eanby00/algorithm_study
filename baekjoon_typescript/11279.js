@@ -9,14 +9,23 @@ var INPUT_LOCATION = './input/inputs.txt';
 var heap = function (items) {
     var heap = [NaN];
     var answers = [];
+    var exchangeValue = function (currentIndex, targetIndex) {
+        var currentItem = heap[currentIndex];
+        heap[currentIndex] = heap[targetIndex];
+        heap[targetIndex] = currentItem;
+    };
+    var getMaxIndex = function (leftIndex, rightIndex) {
+        if (!heap[rightIndex] || heap[leftIndex] > heap[rightIndex]) {
+            return leftIndex;
+        }
+        return rightIndex;
+    };
     var addItemToHeap = function (item) {
         heap.push(item);
         var currentIndex = heap.length - 1;
         var parrentIndex = Math.floor(currentIndex / 2);
         while (heap[currentIndex] > heap[parrentIndex]) {
-            var currentItem = heap[currentIndex];
-            heap[currentIndex] = heap[parrentIndex];
-            heap[parrentIndex] = currentItem;
+            exchangeValue(currentIndex, parrentIndex);
             currentIndex = parrentIndex;
             parrentIndex = Math.floor(currentIndex / 2);
         }
@@ -26,25 +35,15 @@ var heap = function (items) {
             answers.push(0);
             return;
         }
-        var maxValue = heap[1];
-        heap[1] = heap[heap.length - 1];
-        heap[heap.length - 1] = maxValue;
+        exchangeValue(1, heap.length - 1);
         var returnValue = heap.pop();
         var currentIndex = 1;
         var leftChildIndex = currentIndex * 2;
         var rightChildIndex = currentIndex * 2 + 1;
-        var getMaxIndex = function (leftIndex, rightIndex) {
-            if (!heap[rightIndex] || heap[leftIndex] > heap[rightIndex]) {
-                return leftIndex;
-            }
-            return rightIndex;
-        };
         while (heap[currentIndex] < heap[leftChildIndex] ||
             heap[currentIndex] < heap[rightChildIndex]) {
             var maxIndex = getMaxIndex(leftChildIndex, rightChildIndex);
-            var tempValue = heap[currentIndex];
-            heap[currentIndex] = heap[maxIndex];
-            heap[maxIndex] = tempValue;
+            exchangeValue(currentIndex, maxIndex);
             currentIndex = maxIndex;
             leftChildIndex = currentIndex * 2;
             rightChildIndex = currentIndex * 2 + 1;
@@ -60,9 +59,9 @@ var heap = function (items) {
                 addItemToHeap(item);
             }
         });
-        console.log(answers.join('\n'));
+        return answers.join('\n');
     };
-    solution(items);
+    return solution(items);
 };
 var inputs = fs
     .readFileSync(INPUT_LOCATION)
@@ -71,4 +70,4 @@ var inputs = fs
     .split('\n')
     .map(function (input) { return +input.trim(); });
 var items = inputs.slice(1);
-heap(items);
+console.log(heap(items));
