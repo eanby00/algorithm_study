@@ -27,24 +27,19 @@ const makeQuadTree = (n: number, matrix: number[][]) => {
       return matrix[y][x].toString();
     }
 
-    const answers: string[] = ['('];
+    let answer = '';
     const nextN = n / 2;
 
     for (let i = 0; i < 2; ++i) {
       for (let j = 0; j < 2; ++j) {
-        answers.push(getQuarTree(nextN, x + nextN * j, y + nextN * i));
+        answer += getQuarTree(nextN, x + nextN * j, y + nextN * i);
       }
     }
 
-    answers.push(')');
-    return answers.join('');
+    return `(${answer})`;
   };
 
-  const solution = () => {
-    console.log(getQuarTree(n, 0, 0));
-  };
-
-  solution();
+  return getQuarTree(n, 0, 0);
 };
 
 const inputs = fs.readFileSync(INPUT_LOCATION).toString().trim().split('\n');
@@ -57,4 +52,4 @@ const [, ...matrix] = inputs.map((input) =>
     .map((item) => +item)
 );
 
-makeQuadTree(n, matrix);
+console.log(makeQuadTree(n, matrix));

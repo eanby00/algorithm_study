@@ -22,16 +22,14 @@ var makeQuadTree = function (n, matrix) {
         if (checkCompression(n, x, y)) {
             return matrix[y][x].toString();
         }
-        var answers = ['('];
+        var answers = [];
         var nextN = n / 2;
         for (var i = 0; i < 2; ++i) {
             for (var j = 0; j < 2; ++j) {
                 answers.push(getQuarTree(nextN, x + nextN * j, y + nextN * i));
             }
         }
-        answers.push(')');
-        console.log(answers);
-        return answers.join('');
+        return "(".concat(answers.join(''), ")");
     };
     var solution = function () {
         console.log(getQuarTree(n, 0, 0));
