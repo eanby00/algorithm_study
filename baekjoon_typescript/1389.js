@@ -16,7 +16,6 @@ exports.__esModule = true;
 var fs = require("fs");
 var INPUT_LOCATION = './input/inputs.txt';
 var getPersonWithMinKevinValue = function (n, friendships) {
-    var queue = [];
     var graph = {};
     var setGraph = function (n) {
         for (var i = 1; i <= n; ++i) {
@@ -30,26 +29,28 @@ var getPersonWithMinKevinValue = function (n, friendships) {
             graph[end].push(start);
         });
     };
-    var bfs = function (startPerson, visited) {
-        visited[startPerson] = 0;
-        queue.push(startPerson);
-        var _loop_1 = function () {
-            var vertex = queue.shift();
-            graph[vertex].forEach(function (endVertex) {
-                if (visited[endVertex] === null) {
-                    visited[endVertex] = visited[vertex] + 1;
-                    queue.push(endVertex);
-                }
-            });
-        };
-        while (queue.length > 0) {
-            _loop_1();
-        }
-    };
     var getKevinValueWithVertex = function (vertex) {
         var visited = Array(n + 1).fill(null);
-        bfs(vertex, visited);
-        var kevinValue = __spreadArray([,], visited, true).reduce(function (prev, current) { return prev + current; }, 0);
+        var queue = [];
+        var bfs = function (startPerson) {
+            visited[startPerson] = 0;
+            queue.push(startPerson);
+            var _loop_1 = function () {
+                var vertex_1 = queue.shift();
+                graph[vertex_1].forEach(function (endVertex) {
+                    if (visited[endVertex] === null) {
+                        visited[endVertex] = visited[vertex_1] + 1;
+                        queue.push(endVertex);
+                    }
+                });
+            };
+            while (queue.length > 0) {
+                _loop_1();
+            }
+        };
+        bfs(vertex);
+        var visitedWithoutNull = __spreadArray([,], visited, true);
+        var kevinValue = visitedWithoutNull.reduce(function (prev, current) { return prev + current; }, 0);
         return kevinValue;
     };
     var solution = function (n, friendships) {

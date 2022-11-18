@@ -49,10 +49,12 @@ const getPersonWithMinKevinValue = (n: number, friendships: number[][]) => {
     };
 
     bfs(vertex);
-    const kevinValue = [, ...(visited as number[])].reduce(
-      (prev, current) => prev! + current!,
+    const visitedWithoutNull = [, ...visited] as number[];
+    const kevinValue = visitedWithoutNull.reduce(
+      (prev, current) => prev + current,
       0
-    ) as number;
+    );
+
     return kevinValue;
   };
 
