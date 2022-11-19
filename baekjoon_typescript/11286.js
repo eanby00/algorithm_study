@@ -6,16 +6,21 @@ var fs = require("fs");
 var INPUT_LOCATION = './input/inputs.txt';
 var absHeap = function (datas) {
     var heap = [NaN];
-    var checkMinValueWithSameAbsValue = function (startIndex, targetIndex) {
-        return (Math.abs(heap[startIndex]) === Math.abs(heap[targetIndex]) &&
-            heap[startIndex] > heap[targetIndex]);
+    var checkExchangeStartAndTarget = function (startIndex, targetIndex) {
+        return (Math.abs(heap[targetIndex]) > Math.abs(heap[startIndex]) ||
+            (Math.abs(heap[targetIndex]) === Math.abs(heap[startIndex]) &&
+                heap[targetIndex] > heap[startIndex]));
+    };
+    var exchangeStartAndTarget = function (startIndex, targetIndex) {
+        var temp = heap[startIndex];
+        heap[startIndex] = heap[targetIndex];
+        heap[targetIndex] = temp;
     };
     var push = function (item) {
         heap.push(item);
         var currentIndex = heap.length - 1;
         var parrentIndex = Math.floor(currentIndex / 2);
-        while (Math.abs(heap[parrentIndex]) > Math.abs(heap[currentIndex]) ||
-            checkMinValueWithSameAbsValue(parrentIndex, currentIndex)) {
+        while (checkExchangeStartAndTarget(currentIndex, parrentIndex)) {
             var temp = heap[currentIndex];
             heap[currentIndex] = heap[parrentIndex];
             heap[parrentIndex] = temp;
@@ -25,8 +30,7 @@ var absHeap = function (datas) {
     };
     var getMinAbsIndex = function (leftIndex, rightIndex) {
         if (!heap[rightIndex] ||
-            Math.abs(heap[leftIndex]) < Math.abs(heap[rightIndex]) ||
-            checkMinValueWithSameAbsValue(rightIndex, leftIndex)) {
+            checkExchangeStartAndTarget(leftIndex, rightIndex)) {
             return leftIndex;
         }
         return rightIndex;
@@ -42,10 +46,8 @@ var absHeap = function (datas) {
         var currentIndex = 1;
         var leftChildIndex = currentIndex * 2;
         var rightChildIndex = currentIndex * 2 + 1;
-        while (Math.abs(heap[currentIndex]) > Math.abs(heap[leftChildIndex]) ||
-            Math.abs(heap[currentIndex]) > Math.abs(heap[rightChildIndex]) ||
-            checkMinValueWithSameAbsValue(currentIndex, leftChildIndex) ||
-            checkMinValueWithSameAbsValue(currentIndex, rightChildIndex)) {
+        while (checkExchangeStartAndTarget(leftChildIndex, currentIndex) ||
+            checkExchangeStartAndTarget(rightChildIndex, currentIndex)) {
             var minIndex = getMinAbsIndex(leftChildIndex, rightChildIndex);
             var temp_1 = heap[currentIndex];
             heap[currentIndex] = heap[minIndex];

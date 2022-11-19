@@ -8,14 +8,21 @@ const INPUT_LOCATION = './input/inputs.txt';
 const absHeap = (datas: number[]) => {
   const heap: number[] = [NaN];
 
-  const checkMinValueWithSameAbsValue = (
+  const checkExchangeStartAndTarget = (
     startIndex: number,
     targetIndex: number
   ) => {
     return (
-      Math.abs(heap[startIndex]) === Math.abs(heap[targetIndex]) &&
-      heap[startIndex] > heap[targetIndex]
+      Math.abs(heap[targetIndex]) > Math.abs(heap[startIndex]) ||
+      (Math.abs(heap[targetIndex]) === Math.abs(heap[startIndex]) &&
+        heap[targetIndex] > heap[startIndex])
     );
+  };
+
+  const exchangeStartAndTarget = (startIndex: number, targetIndex: number) => {
+    const temp = heap[startIndex];
+    heap[startIndex] = heap[targetIndex];
+    heap[targetIndex] = temp;
   };
 
   const push = (item: number) => {
@@ -24,13 +31,8 @@ const absHeap = (datas: number[]) => {
     let currentIndex = heap.length - 1;
     let parrentIndex = Math.floor(currentIndex / 2);
 
-    while (
-      Math.abs(heap[parrentIndex]) > Math.abs(heap[currentIndex]) ||
-      checkMinValueWithSameAbsValue(parrentIndex, currentIndex)
-    ) {
-      const temp = heap[currentIndex];
-      heap[currentIndex] = heap[parrentIndex];
-      heap[parrentIndex] = temp;
+    while (checkExchangeStartAndTarget(currentIndex, parrentIndex)) {
+      exchangeStartAndTarget(currentIndex, parrentIndex);
 
       currentIndex = parrentIndex;
       parrentIndex = Math.floor(currentIndex / 2);
@@ -40,8 +42,7 @@ const absHeap = (datas: number[]) => {
   const getMinAbsIndex = (leftIndex: number, rightIndex: number) => {
     if (
       !heap[rightIndex] ||
-      Math.abs(heap[leftIndex]) < Math.abs(heap[rightIndex]) ||
-      checkMinValueWithSameAbsValue(rightIndex, leftIndex)
+      checkExchangeStartAndTarget(leftIndex, rightIndex)
     ) {
       return leftIndex;
     }
@@ -53,26 +54,20 @@ const absHeap = (datas: number[]) => {
       return 0;
     }
 
-    const temp = heap[1];
-    heap[1] = heap[heap.length - 1];
-    heap[heap.length - 1] = temp;
+    exchangeStartAndTarget(1, heap.length - 1);
 
     const returnValue = heap.pop()!;
+
     let currentIndex = 1;
     let leftChildIndex = currentIndex * 2;
     let rightChildIndex = currentIndex * 2 + 1;
 
     while (
-      Math.abs(heap[currentIndex]) > Math.abs(heap[leftChildIndex]) ||
-      Math.abs(heap[currentIndex]) > Math.abs(heap[rightChildIndex]) ||
-      checkMinValueWithSameAbsValue(currentIndex, leftChildIndex) ||
-      checkMinValueWithSameAbsValue(currentIndex, rightChildIndex)
+      checkExchangeStartAndTarget(leftChildIndex, currentIndex) ||
+      checkExchangeStartAndTarget(rightChildIndex, currentIndex)
     ) {
       const minIndex = getMinAbsIndex(leftChildIndex, rightChildIndex);
-
-      const temp = heap[currentIndex];
-      heap[currentIndex] = heap[minIndex];
-      heap[minIndex] = temp;
+      exchangeStartAndTarget(currentIndex, minIndex);
 
       currentIndex = minIndex;
       leftChildIndex = currentIndex * 2;
@@ -82,7 +77,7 @@ const absHeap = (datas: number[]) => {
     return returnValue;
   };
 
-  const solution = (datas: number[]) => {
+  const getAnswers = (datas: number[]): number[] => {
     const answers: number[] = [];
     datas.forEach((data) => {
       if (data === 0) {
@@ -94,7 +89,7 @@ const absHeap = (datas: number[]) => {
     return answers;
   };
 
-  return solution(datas).join('\n');
+  return getAnswers(datas).join('\n');
 };
 
 const [, ...inputs] = fs
