@@ -21,9 +21,7 @@ var absHeap = function (datas) {
         var currentIndex = heap.length - 1;
         var parrentIndex = Math.floor(currentIndex / 2);
         while (checkExchangeStartAndTarget(currentIndex, parrentIndex)) {
-            var temp = heap[currentIndex];
-            heap[currentIndex] = heap[parrentIndex];
-            heap[parrentIndex] = temp;
+            exchangeStartAndTarget(currentIndex, parrentIndex);
             currentIndex = parrentIndex;
             parrentIndex = Math.floor(currentIndex / 2);
         }
@@ -39,9 +37,7 @@ var absHeap = function (datas) {
         if (heap.length === 1) {
             return 0;
         }
-        var temp = heap[1];
-        heap[1] = heap[heap.length - 1];
-        heap[heap.length - 1] = temp;
+        exchangeStartAndTarget(1, heap.length - 1);
         var returnValue = heap.pop();
         var currentIndex = 1;
         var leftChildIndex = currentIndex * 2;
@@ -49,16 +45,14 @@ var absHeap = function (datas) {
         while (checkExchangeStartAndTarget(leftChildIndex, currentIndex) ||
             checkExchangeStartAndTarget(rightChildIndex, currentIndex)) {
             var minIndex = getMinAbsIndex(leftChildIndex, rightChildIndex);
-            var temp_1 = heap[currentIndex];
-            heap[currentIndex] = heap[minIndex];
-            heap[minIndex] = temp_1;
+            exchangeStartAndTarget(currentIndex, minIndex);
             currentIndex = minIndex;
             leftChildIndex = currentIndex * 2;
             rightChildIndex = currentIndex * 2 + 1;
         }
         return returnValue;
     };
-    var solution = function (datas) {
+    var getAnswers = function (datas) {
         var answers = [];
         datas.forEach(function (data) {
             if (data === 0) {
@@ -70,7 +64,7 @@ var absHeap = function (datas) {
         });
         return answers;
     };
-    return solution(datas).join('\n');
+    return getAnswers(datas).join('\n');
 };
 var _a = fs
     .readFileSync(INPUT_LOCATION)
