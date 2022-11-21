@@ -7,6 +7,9 @@
 
 // 2. 만약 1이 메모리 초과가 날 경우, 입력 받은 배열 자체를 변경하자
 
+// 다행이도 1번으로 해결할 수 있었다.
+// bfs를 구현할 때는 당연하게도 queue를 이용함으로 shift 연산으로 계산해야 한다.
+
 import * as fs from 'fs';
 
 const INPUT_LOCATION = './input/inputs.txt';
@@ -21,30 +24,15 @@ const getNumberOfEscapeMaze = (n: number, m: number, maze: number[][]) => {
     for (let y = 0; y < n; ++y) {
       for (let x = 0; x < m; ++x) {
         if (maze[y][x] === 0) {
-          recordPathOfMaze[y][x] = NaN;
+          recordPathOfMaze[y][x] = 1;
         }
       }
     }
   };
 
-  const isMergeValue = (x: number, y: number, value: number) => {
-    if (Math.abs(recordPathOfMaze[y][x] - value) > 1) {
-      return true;
-    }
-    return false;
-  };
-
-  const isValidCoordinate = (
-    currentCoordinate: number[],
-    previousValue: number
-  ) => {
-    const [x, y] = currentCoordinate;
-
+  const isValidCoordinate = (x: number, y: number) => {
     try {
-      if (
-        !Number.isNaN(recordPathOfMaze[y][x]) &&
-        (recordPathOfMaze[y][x] === 0 || isMergeValue(x, y, previousValue))
-      ) {
+      if (recordPathOfMaze[y][x] === 0) {
         return true;
       }
     } catch {
@@ -53,59 +41,22 @@ const getNumberOfEscapeMaze = (n: number, m: number, maze: number[][]) => {
     return false;
   };
 
-  const mergeValues = (x: number, y: number, value: number) => {
-    if (recordPathOfMaze[y][x] === 0) {
-      return value;
-    }
-    return Math.min(recordPathOfMaze[y][x], value);
-  };
-
   const bfs = (x: number, y: number) => {
     recordPathOfMaze[y][x] = 1;
+    const dx = [-1, 1, 0, 0];
+    const dy = [0, 0, -1, 1];
     queue.push([x, y]);
 
     while (queue.length > 0) {
-      const [targetX, targetY] = queue.pop()!;
-      const previousValue = recordPathOfMaze[targetY][targetX];
+      const [targetX, targetY] = queue.shift()!;
 
-      if (isValidCoordinate([targetX, targetY - 1], previousValue)) {
-        queue.push([targetX, targetY - 1]);
-
-        recordPathOfMaze[targetY - 1][targetX] = mergeValues(
-          targetX,
-          targetY - 1,
-          recordPathOfMaze[targetY][targetX] + 1
-        );
-      }
-
-      if (isValidCoordinate([targetX, targetY + 1], previousValue)) {
-        queue.push([targetX, targetY + 1]);
-
-        recordPathOfMaze[targetY + 1][targetX] = mergeValues(
-          targetX,
-          targetY + 1,
-          recordPathOfMaze[targetY][targetX] + 1
-        );
-      }
-
-      if (isValidCoordinate([targetX - 1, targetY], previousValue)) {
-        queue.push([targetX - 1, targetY]);
-
-        recordPathOfMaze[targetY][targetX - 1] = mergeValues(
-          targetX - 1,
-          targetY,
-          recordPathOfMaze[targetY][targetX] + 1
-        );
-      }
-
-      if (isValidCoordinate([targetX + 1, targetY], previousValue)) {
-        queue.push([targetX + 1, targetY]);
-
-        recordPathOfMaze[targetY][targetX + 1] = mergeValues(
-          targetX + 1,
-          targetY,
-          recordPathOfMaze[targetY][targetX] + 1
-        );
+      for (let i = 0; i < 4; ++i) {
+        const newX = targetX + dx[i];
+        const newY = targetY + dy[i];
+        if (isValidCoordinate(newX, newY)) {
+          queue.push([newX, newY]);
+          recordPathOfMaze[newY][newX] = recordPathOfMaze[targetY][targetX] + 1;
+        }
       }
     }
   };

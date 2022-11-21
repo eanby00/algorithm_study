@@ -17,22 +17,14 @@ var getNumberOfEscapeMaze = function (n, m, maze) {
         for (var y = 0; y < n; ++y) {
             for (var x = 0; x < m; ++x) {
                 if (maze[y][x] === 0) {
-                    recordPathOfMaze[y][x] = NaN;
+                    recordPathOfMaze[y][x] = 1;
                 }
             }
         }
     };
-    var isMergeValue = function (x, y, value) {
-        if (Math.abs(recordPathOfMaze[y][x] - value) > 1) {
-            return true;
-        }
-        return false;
-    };
-    var isValidCoordinate = function (currentCoordinate, previousValue) {
-        var x = currentCoordinate[0], y = currentCoordinate[1];
+    var isValidCoordinate = function (x, y) {
         try {
-            if (!Number.isNaN(recordPathOfMaze[y][x]) &&
-                (recordPathOfMaze[y][x] === 0 || isMergeValue(x, y, previousValue))) {
+            if (recordPathOfMaze[y][x] === 0) {
                 return true;
             }
         }
@@ -41,33 +33,20 @@ var getNumberOfEscapeMaze = function (n, m, maze) {
         }
         return false;
     };
-    var mergeValues = function (x, y, value) {
-        if (recordPathOfMaze[y][x] === 0) {
-            return value;
-        }
-        return Math.min(recordPathOfMaze[y][x], value);
-    };
     var bfs = function (x, y) {
         recordPathOfMaze[y][x] = 1;
+        var dx = [-1, 1, 0, 0];
+        var dy = [0, 0, -1, 1];
         queue.push([x, y]);
         while (queue.length > 0) {
-            var _a = queue.pop(), targetX = _a[0], targetY = _a[1];
-            var previousValue = recordPathOfMaze[targetY][targetX];
-            if (isValidCoordinate([targetX, targetY - 1], previousValue)) {
-                queue.push([targetX, targetY - 1]);
-                recordPathOfMaze[targetY - 1][targetX] = mergeValues(targetX, targetY - 1, recordPathOfMaze[targetY][targetX] + 1);
-            }
-            if (isValidCoordinate([targetX, targetY + 1], previousValue)) {
-                queue.push([targetX, targetY + 1]);
-                recordPathOfMaze[targetY + 1][targetX] = mergeValues(targetX, targetY + 1, recordPathOfMaze[targetY][targetX] + 1);
-            }
-            if (isValidCoordinate([targetX - 1, targetY], previousValue)) {
-                queue.push([targetX - 1, targetY]);
-                recordPathOfMaze[targetY][targetX - 1] = mergeValues(targetX - 1, targetY, recordPathOfMaze[targetY][targetX] + 1);
-            }
-            if (isValidCoordinate([targetX + 1, targetY], previousValue)) {
-                queue.push([targetX + 1, targetY]);
-                recordPathOfMaze[targetY][targetX + 1] = mergeValues(targetX + 1, targetY, recordPathOfMaze[targetY][targetX] + 1);
+            var _a = queue.shift(), targetX = _a[0], targetY = _a[1];
+            for (var i = 0; i < 4; ++i) {
+                var newX = targetX + dx[i];
+                var newY = targetY + dy[i];
+                if (isValidCoordinate(newX, newY)) {
+                    queue.push([newX, newY]);
+                    recordPathOfMaze[newY][newX] = recordPathOfMaze[targetY][targetX] + 1;
+                }
             }
         }
     };
