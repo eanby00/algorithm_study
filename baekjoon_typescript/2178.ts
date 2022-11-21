@@ -9,6 +9,10 @@
 
 // 다행이도 1번으로 해결할 수 있었다.
 // bfs를 구현할 때는 당연하게도 queue를 이용함으로 shift 연산으로 계산해야 한다.
+// pop을 쓰는 거는 정말 아니다.
+
+// 문제에서 좌표로 준게 아니라면 행렬의 row, col로 접근하자
+// 그편이 x, y축 문제로
 
 import * as fs from 'fs';
 
@@ -21,18 +25,18 @@ const getNumberOfEscapeMaze = (n: number, m: number, maze: number[][]) => {
   const queue: number[][] = [];
 
   const setMaze = (n: number, m: number, maze: number[][]) => {
-    for (let y = 0; y < n; ++y) {
-      for (let x = 0; x < m; ++x) {
-        if (maze[y][x] === 0) {
-          recordPathOfMaze[y][x] = 1;
+    for (let row = 0; row < n; ++row) {
+      for (let col = 0; col < m; ++col) {
+        if (maze[row][col] === 0) {
+          recordPathOfMaze[row][col] = 1;
         }
       }
     }
   };
 
-  const isValidCoordinate = (x: number, y: number) => {
+  const isValidCoordinate = (row: number, col: number) => {
     try {
-      if (recordPathOfMaze[y][x] === 0) {
+      if (recordPathOfMaze[row][col] === 0) {
         return true;
       }
     } catch {
@@ -41,21 +45,24 @@ const getNumberOfEscapeMaze = (n: number, m: number, maze: number[][]) => {
     return false;
   };
 
-  const bfs = (x: number, y: number) => {
-    recordPathOfMaze[y][x] = 1;
-    const dx = [-1, 1, 0, 0];
-    const dy = [0, 0, -1, 1];
-    queue.push([x, y]);
+  const bfs = (row: number, col: number) => {
+    recordPathOfMaze[row][col] = 1;
+    const dRow = [-1, 1, 0, 0];
+    const dCol = [0, 0, -1, 1];
+    queue.push([row, col]);
 
     while (queue.length > 0) {
-      const [targetX, targetY] = queue.shift()!;
+      const [targetRow, targetCol] = queue.shift()!;
 
       for (let i = 0; i < 4; ++i) {
-        const newX = targetX + dx[i];
-        const newY = targetY + dy[i];
-        if (isValidCoordinate(newX, newY)) {
-          queue.push([newX, newY]);
-          recordPathOfMaze[newY][newX] = recordPathOfMaze[targetY][targetX] + 1;
+        const newRow = targetRow + dRow[i];
+        const newCol = targetCol + dCol[i];
+
+        if (isValidCoordinate(newRow, newCol)) {
+          queue.push([newRow, newCol]);
+
+          recordPathOfMaze[newRow][newCol] =
+            recordPathOfMaze[targetRow][targetCol] + 1;
         }
       }
     }
