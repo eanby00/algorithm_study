@@ -8,18 +8,15 @@ import * as fs from 'fs';
 
 const INPUT_LOCATION = './input/inputs.txt';
 
-const apartment = (n: number, matrix: number[][]) => {
+const apartment = (matrix: number[][]) => {
   const answers: number[] = [];
 
-  const isValidCoordinate = (row: number, col: number) => {
+  const isValidCoordinate = (row: number, col: number): boolean => {
     try {
-      if (matrix[row][col] === 1) {
-        return true;
-      }
+      return matrix[row][col] === 1;
     } catch {
       return false;
     }
-    return false;
   };
 
   const setHouseNumber = () => {
@@ -28,19 +25,21 @@ const apartment = (n: number, matrix: number[][]) => {
     const tempCol = [1, -1, 0, 0];
     const stack: number[][] = [];
 
-    const dfs = (row: number, col: number) => {
+    const dfsDefaultBehavior = (row: number, col: number) => {
       matrix[row][col] = 0;
       numberOfHouseNumber += 1;
       stack.push([row, col]);
+    };
+
+    const dfs = (row: number, col: number) => {
+      dfsDefaultBehavior(row, col);
 
       while (stack.length > 0) {
         const [nextRow, nextCol] = stack.pop()!;
 
         for (let i = 0; i < 4; ++i) {
           if (isValidCoordinate(nextRow + tempRow[i], nextCol + tempCol[i])) {
-            matrix[nextRow + tempRow[i]][nextCol + tempCol[i]] = 0;
-            numberOfHouseNumber += 1;
-            stack.push([nextRow + tempRow[i], nextCol + tempCol[i]]);
+            dfsDefaultBehavior(nextRow + tempRow[i], nextCol + tempCol[i]);
           }
         }
       }
@@ -56,22 +55,21 @@ const apartment = (n: number, matrix: number[][]) => {
         }
       });
     });
+
+    answers.sort((a, b) => a - b);
   };
 
   setHouseNumber();
-  answers.sort((a, b) => a - b);
   return [answers.length, ...answers];
 };
 
 const inputs = fs.readFileSync(INPUT_LOCATION).toString().trim().split('\n');
 
-const [nString, ...matrixString] = inputs;
-const n = +nString.trim();
-const matrix = matrixString.map((input) =>
+const [, ...matrix] = inputs.map((input) =>
   input
     .trim()
     .split('')
     .map((cell) => +cell)
 );
 
-console.log(apartment(n, matrix).join('\n'));
+console.log(apartment(matrix).join('\n'));
