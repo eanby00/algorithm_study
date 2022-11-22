@@ -112,6 +112,26 @@ const bfs = (vertex: number) => {
 
 - `shift`연산이다. 중요하다.
 
+### Floyd-Warshall 알고리즘
+
+#### 11403 경로 탐색
+
+```
+for (let temp = 0; temp < n; ++temp) {
+    for (let start = 0; start < n; ++start) {
+      for (let end = 0; end < n; ++end) {
+        if (matrix[start][temp] === 1 && matrix[temp][end] === 1) {
+          matrix[start][end] = 1;
+        }
+      }
+    }
+  }
+```
+
+- 중요: `temp, start, end 순`으로 3중 for문을 돌려야 한다.
+- start -> temp -> end가 갈 수 있는가에 대한 코드
+- 또는 start -> end까지의 경로 값이 중간에 어디를 거쳐갈 때와 비교해서 작은지 비교하게 만드는 알고리즘
+
 ### Heap
 
 - 트리의 루트는 조건에 제일 만족하는 값을 나타낸다.
