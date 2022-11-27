@@ -91,17 +91,10 @@ const getAnswer = (coordinate: number[], matrixs: number[][][]) => {
   );
   const queue = new Queue();
 
-  const visitIsValid = (
-    height: number,
-    row: number,
-    col: number,
-    newVisited: number
-  ) => {
+  const visitIsValid = (height: number, row: number, col: number) => {
     try {
       return (
-        (visited[height][row][col] === 0 ||
-          visited[height][row][col] > newVisited) &&
-        matrixs[height][row][col] !== -1
+        visited[height][row][col] === 0 && matrixs[height][row][col] !== -1
       );
     } catch {
       return false;
@@ -123,7 +116,7 @@ const getAnswer = (coordinate: number[], matrixs: number[][][]) => {
         const newVisited =
           visited[standardHeight][standardRow][standardCol] + 1;
 
-        if (visitIsValid(nextHeight, nextRow, nextCol, newVisited)) {
+        if (visitIsValid(nextHeight, nextRow, nextCol)) {
           queue.push(nextHeight, nextRow, nextCol);
           visited[nextHeight][nextRow][nextCol] = newVisited;
         }
